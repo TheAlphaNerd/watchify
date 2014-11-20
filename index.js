@@ -1,7 +1,7 @@
 var through = require('through2');
 var fs = require('fs');
 var path = require('path');
-var chokidar = require('chokidar');
+var gaze = require('gaze');
 
 module.exports = watchify;
 module.exports.args = {
@@ -77,9 +77,9 @@ function watchify (b, opts) {
     
     function makeWatcher (file, mfile) {
         var key = mfile || file;
-        var w = chokidar.watch(file, {persistent: true});
+        var w = gaze(file)
         w.on('error', b.emit.bind(b, 'error'));
-        w.on('change', function () {
+        w.on('changed', function () {
             invalidate(key);
         });
         fwatchers[key].push(w);
